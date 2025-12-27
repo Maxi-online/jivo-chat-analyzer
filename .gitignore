@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+*.so
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+csv_bot_env/
+.venv/
+venv/
+ENV/
+
+# Logs / outputs
+*.log
+parsed_jivo.json
+parsed_jivo.csv
+
+# Secrets
+.env
+*.env
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# PyInstaller
+*.spec.bak
+*.manifest
+*.toc
+*.pyz
+*.exe
+

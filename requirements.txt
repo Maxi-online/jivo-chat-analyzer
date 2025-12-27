@@ -1,0 +1,6 @@
+openai
+requests
+tenacity
+tqdm
+aiohttp
+anyio
