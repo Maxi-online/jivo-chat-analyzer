@@ -1,66 +1,68 @@
-# JivoAnalyticsBot
+# Jivo Chat Analyzer
 
-JivoAnalyticsBot is a small Python tool that downloads a Jivo chat export (JSON), extracts end-user messages, and classifies each message into a **category** and **sentiment** using the OpenAI API.
+**An asynchronous Python CLI for converting Jivo chat exports into labelled analytics data.**
 
-The classifier uses a generic taxonomy suitable for product/support analytics.
+The tool downloads a JSON export, filters end-user messages, requests a category
+and sentiment label for each message, and writes JSON/CSV results. It is a compact
+Applied AI integration with explicit parsing and output boundaries.
 
-## Features
+## Processing flow
 
-- Download Jivo export JSON by URL
-- Extract end-user messages (filters out agent/bot events)
-- AI classification:
-  - Category: one of a predefined set (English)
-  - Sentiment: `positive` / `negative` / `neutral`
-- Save results to:
-  - `parsed_jivo.json`
-  - `parsed_jivo.csv`
-
-## Requirements
-
-- Python 3.10+ (recommended: 3.11)
-- An OpenAI API key
-
-## Installation (Windows)
-
-1. Create and install dependencies:
-
-```bash
-install.bat
+```text
+Jivo export URL → JSON parsing → end-user events → bounded async LLM requests → label validation → JSON / CSV
 ```
 
-2. Set the `OPENAI_API_KEY` environment variable to your OpenAI API key, then restart the terminal so the variable is available.
+- Agent/bot events are separated from end-user messages before classification.
+- Requests use a semaphore-based concurrency limit.
+- The classifier requests JSON and normalizes category/sentiment values against
+  a fixed taxonomy.
+- Unknown category or malformed output can fall back to `Other` / `neutral`;
+  these defaults should not be mistaken for confident model judgements.
+- The output files are `parsed_jivo.json` and `parsed_jivo.csv`.
 
-## Usage
+Classification is message-level. It is not a complete model of conversation
+quality, customer intent or business outcomes.
 
-Run:
+## Setup and use
+
+Use Python 3.10+; Python 3.11 is the existing recommended runtime.
 
 ```bash
-run.bat
+git clone https://github.com/Maxi-online/jivo-chat-analyzer.git
+cd jivo-chat-analyzer
 ```
 
-Then paste the Jivo export JSON URL when prompted, for example:
+On Windows, `install.bat` creates the environment and installs dependencies.
+Configure `OPENAI_API_KEY` in the process environment before running the tool.
+`OPENAI_BASE_URL` optionally selects a custom gateway. No key belongs in the
+repository or a shared example.
 
-- `https://files.jivosite.com/export/your_file.json`
+```powershell
+.\install.bat
+.\run.bat
+```
 
-After processing finishes, you will get:
+Paste a Jivo export URL you are authorized to process when prompted. The
+configured model is selected in [agent.py](agent.py). Provider access, rate limits
+and request charges apply when the classifier is run.
 
-- `parsed_jivo.json`
-- `parsed_jivo.csv`
+## Implementation map
 
-## Configuration
+| File | Responsibility |
+|---|---|
+| [json_to_csv_json.py](json_to_csv_json.py) | Download, event filtering, bounded processing and exports |
+| [agent.py](agent.py) | Prompt, model request, taxonomy and response normalization |
+| [install.bat](install.bat) / [run.bat](run.bat) | Windows setup and entry point |
+| [build_exe.bat](build_exe.bat) | Optional PyInstaller packaging |
 
-- `OPENAI_API_KEY` (required): your OpenAI API key.
-- `OPENAI_BASE_URL` (optional): custom gateway/proxy base URL (if you use one).
+## Validation scope
 
-## Project structure
-
-- `json_to_csv_json.py`: main script (download → parse → classify → save)
-- `agent.py`: OpenAI classifier logic
-- `run.bat`: run helper for Windows
-- `install.bat`: venv + dependencies
-- `build_exe.bat` / `JivoAnalyticsBot.spec`: optional PyInstaller build files
+There is no published held-out category/sentiment benchmark in this repository.
+JSON parsing and taxonomy fallback do not establish classification accuracy or
+reliable retry behaviour. An evaluation should measure per-category confusion,
+invalid-response/fallback rates, throughput and cost on anonymized or synthetic
+messages with independently reviewed labels.
 
 ## License
 
-MIT. See `LICENSE`.
-
+[MIT](LICENSE).
