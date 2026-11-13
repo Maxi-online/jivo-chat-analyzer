@@ -58,8 +58,7 @@ and request charges apply when the classifier is run.
 ## Validation scope
 
 There is no published held-out category/sentiment benchmark in this repository.
-JSON parsing and taxonomy fallback do not establish classification accuracy or
-reliable retry behaviour. An evaluation should measure per-category confusion,
+An evaluation should measure per-category confusion,
 invalid-response/fallback rates, throughput and cost on anonymized or synthetic
 messages with independently reviewed labels.
 
