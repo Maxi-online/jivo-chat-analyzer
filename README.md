@@ -66,10 +66,10 @@ messages with independently reviewed labels.
 
 [MIT](LICENSE).
 
-## Конфигурация, приватность и воспроизведение
+## Configuration, privacy and reproducibility
 
-Ключи AI-провайдера и доступ к экспорту чатов задавайте в локальной конфигурации. Перед демонстрацией заменяйте имена, контакты, идентификаторы клиентов и сообщения синтетическими примерами; не коммитьте реальные выгрузки чатов или сформированные из них отчёты.
+Supply AI-provider credentials and chat-export access through local configuration. Replace names, contacts, customer identifiers and messages with synthetic examples before demonstrations. Do not commit real chat exports or reports derived from them.
 
-Секреты храните в игнорируемых локальных файлах или переменных окружения. Безопасные примеры содержат только структуру настройки. Не передавайте секреты в командной строке и не добавляйте заполненные `.env`, приватные ключи, базы данных и логи в коммиты.
+Keep credentials in ignored local files or environment variables. Configuration examples contain structure only. Avoid passing secrets on the command line or committing populated `.env` files, private keys, databases or logs.
 
-Workflow [Secret scan](.github/workflows/secret-scan.yml) проверяет текущие файлы и входящие коммиты Gitleaks 8.30.1 с редактированием значений в выводе. Это проверка на известные шаблоны, а не подтверждение отсутствия всех возможных утечек. Удаление значения из HEAD не очищает старую историю; порядок действий описан в [SECURITY.md](SECURITY.md).
+The [Secret scan](.github/workflows/secret-scan.yml) workflow scans current files and incoming commits with Gitleaks 8.30.1 and redacts matched values. Pattern scanning cannot prove that every possible disclosure is absent. Removing a value from HEAD does not clean older history; see [SECURITY.md](SECURITY.md) for incident handling.
